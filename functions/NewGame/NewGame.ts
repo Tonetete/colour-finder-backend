@@ -30,7 +30,6 @@ class NewGame {
     const lastIndex = await new Promise<string>((resolve) =>
       this.s3.getObject(params, (error: any, data: any) => {
         if (error) {
-          console.error(error);
           throw new Error(error);
         }
         resolve(`${Number(data.Body.toString("utf-8")) + 1}`);
@@ -42,7 +41,6 @@ class NewGame {
         { Body: `${lastIndex}`, ...params },
         (error: any, data: any) => {
           if (error) {
-            console.error(error);
             throw new Error(error);
           }
           resolve(data);
@@ -72,6 +70,7 @@ class NewGame {
         }
       )
     );
+
     if (!result) {
       const params = {
         Body: "0",
@@ -104,7 +103,6 @@ class NewGame {
       return await new Promise((resolve) =>
         this.s3.putObject(params, (error: any, data: any) => {
           if (error) {
-            console.error(error);
             throw new Error(error);
           }
           resolve(index);

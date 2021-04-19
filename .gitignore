@@ -4,3 +4,4 @@ node_modules
 backend-colours-finder
 .vscode/
 yarn-error.log
+coverage/
