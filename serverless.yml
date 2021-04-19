@@ -1,0 +1,70 @@
+service: colours-finder
+
+plugins:
+  - serverless-plugin-typescript
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  profile: default
+  region: us-east-1
+  environment:
+    AWS_REGION_NAME: "us-east-1"
+    BUCKET_NAME: "usersgames"
+
+functions: # Your "Functions"
+  newGame:
+    handler: functions/handler.newGame
+    role: UsersGamesReadWriteS3role
+    package:
+      include:
+        - .build/functions/NewGame/*.js
+        - .build/CreateResponse.js
+    events: # The "Events" that trigger this function
+      - http:
+          method: post
+          path: /colours-finder/new-game
+
+  guess:
+    handler: functions/handler.guess
+    role: UsersGamesReadWriteS3role
+    package:
+      include:
+        - .build/functions/Guess/*.js
+        - .build/CreateResponse.js
+    events:
+      - http:
+          method: post
+          path: /colours-finder/guess
+resources: # The "Resources" your "Functions" use.  Raw AWS CloudFormation goes in here
+  Resources:
+    # The S3 bucket that stores the games
+    UsersGames:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: "usersgames"
+    UsersGamesReadWriteS3role:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: userGamesReadWriteS3role
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: GetPutObject
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: "Allow"
+                  Action:
+                    - "s3:*"
+                  Resource:
+                    Fn::Join:
+                      - ""
+                      - - "arn:aws:s3:::*"
