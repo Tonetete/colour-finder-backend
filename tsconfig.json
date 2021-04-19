@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "preserveConstEnums": true,
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "target": "es6",
+    "outDir": ".build",
+    "moduleResolution": "node",
+    "isolatedModules": false,
+    "lib": ["es2015"],
+    "rootDir": "./"
+  },
+  "include": ["./functions/**/*.ts"],
+  "exclude": ["node_modules/**/*.*", "./functions/**/*.test.ts"]
+}
