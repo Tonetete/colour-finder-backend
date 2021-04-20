@@ -1,14 +1,16 @@
 import S3 from "aws-sdk/clients/s3";
 const { AWS_REGION_NAME, BUCKET_NAME } = process.env;
 
+export interface GameProps {
+  id: number;
+  numAttempts: number;
+  attempts: number;
+  gameState: string[];
+}
+
 export interface GameUserFileProps {
   lastIndex: number;
-  games?: {
-    id: number;
-    numAttempts: number;
-    attempts: number;
-    gameState: string[];
-  }[];
+  games: GameProps[];
 }
 
 class NewGame {

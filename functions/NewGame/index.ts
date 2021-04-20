@@ -1,4 +1,4 @@
-import { NewGame, GameUserFileProps } from "./NewGame";
+import { NewGame, GameUserFileProps, GameProps } from "./NewGame";
 
-export type { GameUserFileProps };
+export type { GameUserFileProps, GameProps };
 export { NewGame };
