@@ -13,8 +13,8 @@ interface EventProps {
 
 const newGame = async (event: EventProps, context: any, callback: any) => {
   try {
-    const { numAttemps } = event.pathParameters;
-    if (numAttemps) {
+    if (event?.pathParameters?.numAttemps) {
+      const { numAttemps } = event.pathParameters;
       NewGame.init(numAttemps);
       const gameId = await NewGame.create();
       return createResponse(200, { id: gameId });
@@ -27,8 +27,11 @@ const newGame = async (event: EventProps, context: any, callback: any) => {
 
 const guess = async (event: EventProps, context: any, callback: any) => {
   try {
-    const { gameId, userCombination } = event.pathParameters;
-    if (gameId && userCombination) {
+    if (
+      event.pathParameters?.gameId &&
+      event?.pathParameters?.userCombination
+    ) {
+      const { gameId, userCombination } = event.pathParameters;
       Guess.init(gameId);
       const result = await Guess.guess(userCombination);
       return createResponse(200, { ...result });
