@@ -38,7 +38,7 @@ class Guess {
           );
           const game = result.games?.find((g) => g.id === this.gameId);
 
-          if (game && game.attemps === game.numAttemps) {
+          if (game && game.attempts === game.numAttempts) {
             resolve({ message: "You LOSE" });
           } else {
             const occurrences = userCombination.reduce(
