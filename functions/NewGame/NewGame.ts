@@ -5,8 +5,8 @@ export interface GameUserFileProps {
   lastIndex: number;
   games?: {
     id: number;
-    numAttemps: number;
-    attemps: number;
+    numAttempts: number;
+    attempts: number;
     gameState: string[];
   }[];
 }
@@ -14,11 +14,11 @@ export interface GameUserFileProps {
 class NewGame {
   static s3: any;
   static colours: string[];
-  static numAttemps: number;
+  static numAttempts: number;
   static dataFileName: string;
 
-  static init(numAttemps: number) {
-    this.numAttemps = numAttemps;
+  static init(numAttempts: number) {
+    this.numAttempts = numAttempts;
     this.dataFileName = "data.json";
     this.colours = ["R", "G", "P", "Y", "B"];
     this.s3 = new S3({
@@ -79,8 +79,8 @@ class NewGame {
     const games = dataFile?.games ? [...dataFile.games] : [];
     games.push({
       id: dataFile.lastIndex,
-      attemps: 0,
-      numAttemps: this.numAttemps,
+      attempts: 0,
+      numAttempts: this.numAttempts,
       gameState: this.generateGameState(),
     });
 

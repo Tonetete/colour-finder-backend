@@ -13,9 +13,9 @@ interface EventProps {
 
 const newGame = async (event: EventProps, context: any, callback: any) => {
   try {
-    if (event?.pathParameters?.numAttemps) {
-      const { numAttemps } = event.pathParameters;
-      NewGame.init(numAttemps);
+    if (event?.pathParameters?.numAttempts) {
+      const { numAttempts } = event.pathParameters;
+      NewGame.init(numAttempts);
       const gameId = await NewGame.create();
       return createResponse(200, { id: gameId });
     }
