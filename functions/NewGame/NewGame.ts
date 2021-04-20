@@ -41,7 +41,7 @@ class NewGame {
           (error: any, dataGetObject: any) => {
             if (error && error.name === "NoSuchKey") {
               // File doesn't exist
-              resolveGetObject(null);
+              return resolveGetObject(null);
             } else if (error) {
               throw new Error(error);
             }

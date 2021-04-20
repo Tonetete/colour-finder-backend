@@ -1,4 +1,3 @@
-import https from "https";
 import dotenv from "dotenv";
 import { createResponse } from "./CreateResponse";
 import { NewGame } from "./NewGame";
@@ -14,8 +13,7 @@ interface EventProps {
 const newGame = async (event: EventProps, context: any, callback: any) => {
   try {
     if (event?.pathParameters?.numAttempts) {
-      const { numAttempts } =
-        typeof event === "string" ? JSON.parse(event) : event.pathParameters;
+      const { numAttempts } = event.pathParameters;
       NewGame.init(numAttempts);
       const gameId = await NewGame.create();
       return createResponse(200, { id: gameId });
