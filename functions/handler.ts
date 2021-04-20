@@ -14,7 +14,8 @@ interface EventProps {
 const newGame = async (event: EventProps, context: any, callback: any) => {
   try {
     if (event?.pathParameters?.numAttempts) {
-      const { numAttempts } = event.pathParameters;
+      const { numAttempts } =
+        typeof event === "string" ? JSON.parse(event) : event.pathParameters;
       NewGame.init(numAttempts);
       const gameId = await NewGame.create();
       return createResponse(200, { id: gameId });
@@ -28,7 +29,7 @@ const newGame = async (event: EventProps, context: any, callback: any) => {
 const guess = async (event: EventProps, context: any, callback: any) => {
   try {
     if (
-      event.pathParameters?.gameId &&
+      event?.pathParameters?.gameId &&
       event?.pathParameters?.userCombination
     ) {
       const { gameId, userCombination } = event.pathParameters;
