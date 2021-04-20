@@ -20,7 +20,7 @@ const newGame = async (event: EventProps, context: any, callback: any) => {
     }
     return createResponse(400, { message: "Bad Request" });
   } catch (e) {
-    return createResponse(500, e);
+    return createResponse(500, e.message);
   }
 };
 
@@ -37,7 +37,7 @@ const guess = async (event: EventProps, context: any, callback: any) => {
     }
     return createResponse(400, { message: "Bad Request" });
   } catch (e) {
-    return createResponse(500, e);
+    return createResponse(500, e.message);
   }
 };
 

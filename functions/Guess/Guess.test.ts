@@ -8,6 +8,7 @@ jest.mock("aws-sdk/clients/s3", () => {
       this.region = region;
     }
     getObject() {}
+    putObject() {}
   };
 });
 
@@ -19,8 +20,8 @@ const dataMock = {
         games: [
           {
             id: 0,
-            attemps: 0,
-            numAttemps: 3,
+            attempts: 0,
+            numAttempts: 3,
             gameState: ["R", "Y", "P", "G", "B"],
           },
         ],
@@ -28,11 +29,15 @@ const dataMock = {
   },
 };
 
+beforeEach(() => {
+  Guess.init(0);
+  Guess.s3.putObject = jest.fn((params, cb) => cb(null, {}));
+});
+
 describe("Guess Lambda UT", () => {
-  test("WHEN get game state file THEN should compare number of occurences with user given", async () => {
+  test("WHEN get game state from data file THEN should compare number of occurences with user given", async () => {
     const userCombination = ["Y", "G", "P", "R", "G"];
 
-    Guess.init(0);
     Guess.s3.getObject = jest.fn((params, cb) => cb(null, dataMock));
 
     const result = await Guess.guess(userCombination);
@@ -43,9 +48,8 @@ describe("Guess Lambda UT", () => {
   test("WHEN the user reach max of attemps THEN should return message of him being a loser", async () => {
     const userCombination = ["Y", "G", "P", "R", "G"];
     const parseData = JSON.parse(dataMock.Body.toString());
-    parseData.games[0].attemps = 3;
+    parseData.games[0].attempts = 3;
 
-    Guess.init(0);
     Guess.s3.getObject = jest.fn((params, cb) =>
       cb(null, { Body: { toString: () => JSON.stringify({ ...parseData }) } })
     );
@@ -57,7 +61,7 @@ describe("Guess Lambda UT", () => {
 
   test("WHEN the user hits all the occurrences THEN should return message of him being a winner", async () => {
     const userCombination = ["R", "Y", "P", "G", "B"];
-    Guess.init(0);
+
     Guess.s3.getObject = jest.fn((params, cb) => cb(null, dataMock));
 
     const result = await Guess.guess(userCombination);
@@ -68,8 +72,22 @@ describe("Guess Lambda UT", () => {
   test("WHEN there was an unexpected error reading file from bucket THEN should throw an error", async () => {
     const error = "UNEXPECTED ERROR";
     const userCombination = ["R", "Y", "P", "G", "B"];
-    Guess.init(0);
+
     Guess.s3.getObject = jest.fn((params, cb) => cb(error, {}));
+
+    try {
+      await Guess.guess(userCombination);
+    } catch (e) {
+      expect(e.message).toBe(error);
+    }
+  });
+
+  test("WHEN there was an unexpected error editing file from bucket THEN should throw an error", async () => {
+    const error = "UNEXPECTED ERROR";
+    const userCombination = ["Y", "G", "P", "R", "G"];
+
+    Guess.s3.getObject = jest.fn((params, cb) => cb(null, dataMock));
+    Guess.s3.putObject = jest.fn((params, cb) => cb(error, {}));
 
     try {
       await Guess.guess(userCombination);

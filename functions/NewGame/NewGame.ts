@@ -78,7 +78,7 @@ class NewGame {
     const dataFile = await this.checkDataFile();
     dataFile.lastIndex += 1;
 
-    const games = dataFile?.games ? [...dataFile.games] : [];
+    const games = [...dataFile.games];
     games.push({
       id: dataFile.lastIndex,
       attempts: 0,

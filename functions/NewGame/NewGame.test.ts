@@ -77,7 +77,9 @@ describe("NewGame Lambda UT", () => {
   });
 
   test("WHEN create a new game and data file has no games THEN should create array of games", async () => {
-    NewGame.checkDataFile = jest.fn(() => Promise.resolve({ lastIndex: 0 }));
+    NewGame.checkDataFile = jest.fn(() =>
+      Promise.resolve({ lastIndex: 0, games: [] })
+    );
     NewGame.s3.putObject = jest.fn((params, cb) => cb(null, {}));
 
     const result = await NewGame.create();
